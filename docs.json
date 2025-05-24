@@ -1,55 +1,54 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "ByeFive Docs",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#FE3859",
+    "light": "#FF8BA3",
+    "dark": "#B81935"
   },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Guias",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Primeiros Passos",
             "pages": [
               "index",
-              "quickstart",
-              "development"
+              "introducao",
+              "configuracao"
             ]
           },
           {
-            "group": "Essentials",
+            "group": "Fundamentos",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
+              "fundamentos/estilos",
+              "fundamentos/componentes",
+              "fundamentos/integracoes",
+              "fundamentos/configuracoes",
+              "fundamentos/estrutura"
             ]
           }
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "Referência da API",
         "groups": [
           {
-            "group": "API Documentation",
+            "group": "Introdução à API",
             "pages": [
-              "api-reference/introduction"
+              "api/introducao"
             ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Exemplos de Endpoints",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api/endpoints/get",
+              "api/endpoints/post",
+              "api/endpoints/delete",
+              "api/endpoints/webhook"
             ]
           }
         ]
@@ -58,45 +57,44 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "Site Oficial",
+          "href": "https://byefive.com.br",
+          "icon": "globe"
         },
         {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
+          "anchor": "Instagram",
+          "href": "https://instagram.com/byefive_",
+          "icon": "camera"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "Contato",
+          "href": "mailto:contato@byefive.com.br",
+          "icon": "envelope"
         }
       ]
     }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/byefive-light.svg",
+    "dark": "/logo/byefive-dark.svg"
   },
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Fale Conosco",
+        "href": "mailto:contato@byefive.com.br"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Visitar Loja",
+      "href": "https://byefive.com.br"
     }
   },
   "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+  "socials": {
+    "instagram": "https://instagram.com/byefive_",
+    "website": "https://www.tiktok.com/@byefive_"
   }
+}
 }
