@@ -4,8 +4,8 @@
   "name": "ByeFive Docs",
   "colors": {
     "primary": "#b23390",
-    "light": "#FF8BA3",
-    "dark": "#B81935"
+    "light": "#b23390",
+    "dark": "#b23390"
   },
  "favicon": "/favicon.svg",
   "navigation": {
