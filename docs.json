@@ -7,48 +7,49 @@
     "light": "#FF8BA3",
     "dark": "#B81935"
   },
-  "favicon": "/favicon.svg",
+ "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guias",
+        "tab": "Guides",
         "groups": [
           {
-            "group": "Primeiros Passos",
+            "group": "Get Started",
             "pages": [
               "index",
-              "introducao",
-              "configuracao"
+              "quickstart",
+              "development"
             ]
           },
           {
-            "group": "Fundamentos",
+            "group": "Essentials",
             "pages": [
-              "fundamentos/estilos",
-              "fundamentos/componentes",
-              "fundamentos/integracoes",
-              "fundamentos/configuracoes",
-              "fundamentos/estrutura"
+              "essentials/markdown",
+              "essentials/code",
+              "essentials/images",
+              "essentials/settings",
+              "essentials/navigation",
+              "essentials/reusable-snippets"
             ]
           }
         ]
       },
       {
-        "tab": "Referência da API",
+        "tab": "API Reference",
         "groups": [
           {
-            "group": "Introdução à API",
+            "group": "API Documentation",
             "pages": [
-              "api/introducao"
+              "api-reference/introduction"
             ]
           },
           {
-            "group": "Exemplos de Endpoints",
+            "group": "Endpoint Examples",
             "pages": [
-              "api/endpoints/get",
-              "api/endpoints/post",
-              "api/endpoints/delete",
-              "api/endpoints/webhook"
+              "api-reference/endpoint/get",
+              "api-reference/endpoint/create",
+              "api-reference/endpoint/delete",
+              "api-reference/endpoint/webhook"
             ]
           }
         ]
@@ -57,44 +58,45 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Site Oficial",
-          "href": "https://byefive.com.br",
-          "icon": "globe"
+          "anchor": "Documentation",
+          "href": "https://mintlify.com/docs",
+          "icon": "book-open-cover"
         },
         {
-          "anchor": "Instagram",
-          "href": "https://instagram.com/byefive_",
-          "icon": "camera"
+          "anchor": "Community",
+          "href": "https://mintlify.com/community",
+          "icon": "slack"
         },
         {
-          "anchor": "Contato",
-          "href": "mailto:contato@byefive.com.br",
-          "icon": "envelope"
+          "anchor": "Blog",
+          "href": "https://mintlify.com/blog",
+          "icon": "newspaper"
         }
       ]
     }
   },
   "logo": {
-    "light": "/logo/byefive-light.svg",
-    "dark": "/logo/byefive-dark.svg"
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
   },
   "navbar": {
     "links": [
       {
-        "label": "Fale Conosco",
-        "href": "mailto:contato@byefive.com.br"
+        "label": "Support",
+        "href": "mailto:hi@mintlify.com"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Visitar Loja",
-      "href": "https://byefive.com.br"
+      "label": "Dashboard",
+      "href": "https://dashboard.mintlify.com"
     }
   },
   "footer": {
-  "socials": {
-    "instagram": "https://instagram.com/byefive_",
-    "website": "https://www.tiktok.com/@byefive_"
+    "socials": {
+      "x": "https://x.com/mintlify",
+      "github": "https://github.com/mintlify",
+      "linkedin": "https://linkedin.com/company/mintlify"
+    }
   }
-}
 }
