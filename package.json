@@ -1,0 +1,31 @@
+{
+  "name": "byfive-cli",
+  "version": "1.0.0",
+  "description": "CLI para gerenciar documentações de API Reference e OpenAPI",
+  "main": "dist/cli.js",
+  "bin": {
+    "byfive-cli": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc && pnpm copy-templates",
+    "copy-templates": "cp -r src/templates dist/",
+    "start": "node ./dist/cli.js"
+  },
+  "keywords": [
+    "cli",
+    "documentation",
+    "openapi",
+    "byfive"
+  ],
+  "author": "ByeFive",
+  "license": "MIT",
+  "dependencies": {
+    "fs-extra": "^11.0.0",
+    "inquirer": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.8",
+    "typescript": "^5.0.0"
+  }
+}

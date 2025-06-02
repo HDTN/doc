@@ -1,0 +1,237 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Security API",
+    "description": "API para gerenciamento de credenciais de segurança no sistema ByeFive",
+    "version": "1.0.0",
+    "contact": {
+      "name": "ByeFive Suporte",
+      "email": "suporte@byefive.com.br"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://security.app.staging.byefive.com.br/rest",
+      "description": "Servidor de Staging"
+    },
+    {
+      "url": "https://security.app.production.byefive.com.br/rest",
+      "description": "Servidor de Produção"
+    }
+  ],
+  "security": [
+    {
+      "apiKeyHeader": []
+    }
+  ],
+  "paths": {
+    "/secrets/keychar/{keycharName}": {
+      "get": {
+        "summary": "Buscar Keychar e KeycharPassword",
+        "description": "Obtém informações de keychar para criptografia e descriptografia",
+        "operationId": "getKeychar",
+        "parameters": [
+          {
+            "name": "keycharName",
+            "in": "path",
+            "description": "Nome do keychar. Valores permitidos: default, token, qr (ou combinações separadas por hífen)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "default-qr"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Solicitação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeycharResponse"
+                },
+                "examples": {
+                  "singleKeychar": {
+                    "value": {
+                      "keychar": "1234567890abcdef",
+                      "keycharPassword": "asdf1234"
+                    }
+                  },
+                  "multipleKeychars": {
+                    "value": {
+                      "default": {
+                        "keychar": "1234567890abcdef",
+                        "keycharPassword": "asdf1234"
+                      },
+                      "qr": {
+                        "keychar": "abcdef1234567890",
+                        "keycharPassword": "qwer5678"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado - API Key inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Keychar não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/secrets/api-key/{keyName}": {
+      "get": {
+        "summary": "Buscar API Key",
+        "description": "Obtém uma API Key específica pelo seu nome",
+        "operationId": "getApiKey",
+        "parameters": [
+          {
+            "name": "keyName",
+            "in": "path",
+            "description": "Nome da API Key (deve começar com APIKEY_)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "APIKEY_USERS"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Solicitação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyResponse"
+                },
+                "example": {
+                  "apiKey": "abcdef123456"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado - API Key inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "API Key não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKeyHeader": {
+        "type": "apiKey",
+        "name": "x-api-key",
+        "in": "header",
+        "description": "API Key necessária para acessar os endpoints de segurança"
+      }
+    },
+    "schemas": {
+      "KeycharResponse": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "keychar": {
+                "type": "string",
+                "description": "Chave de criptografia"
+              },
+              "keycharPassword": {
+                "type": "string",
+                "description": "Senha associada à chave de criptografia"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "keychar": {
+                  "type": "string",
+                  "description": "Chave de criptografia"
+                },
+                "keycharPassword": {
+                  "type": "string",
+                  "description": "Senha associada à chave de criptografia"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ApiKeyResponse": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "description": "Valor da API Key"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Mensagem de erro"
+          },
+          "statusCode": {
+            "type": "integer",
+            "description": "Código HTTP do erro"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Momento em que o erro ocorreu"
+          }
+        }
+      }
+    }
+  }
+}

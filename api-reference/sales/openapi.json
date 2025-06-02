@@ -1,0 +1,1034 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Sales API",
+    "description": "API para gerenciar vendas, cancelamentos e leitores de cartão no sistema ByeFive",
+    "version": "1.0.0",
+    "contact": {
+      "name": "ByeFive Suporte",
+      "email": "suporte@byefive.com.br"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://sales.app.staging.byefive.com.br/rest",
+      "description": "Servidor de Staging"
+    },
+    {
+      "url": "https://sales.app.production.byefive.com.br/rest",
+      "description": "Servidor de Produção"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Vendas",
+      "description": "Operações relacionadas a vendas"
+    },
+    {
+      "name": "Logs",
+      "description": "Consulta de logs de vendas"
+    },
+    {
+      "name": "Leitores de Cartão",
+      "description": "Gerenciamento de leitores de cartão"
+    }
+  ],
+  "paths": {
+    "/sales/new": {
+      "post": {
+        "summary": "Nova Venda",
+        "description": "Registra uma nova venda a partir de um QR Code de transporte",
+        "operationId": "createSale",
+        "tags": ["Vendas"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewSaleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Venda criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou QR Code já utilizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "QR Code não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/cancel": {
+      "post": {
+        "summary": "Cancelar Venda",
+        "description": "Cancela uma venda existente a partir de um QR Code de transporte",
+        "operationId": "cancelSale",
+        "tags": ["Vendas"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelSaleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Venda cancelada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou venda não pode ser cancelada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Venda não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/qr-code/{qrCodeTransport}": {
+      "get": {
+        "summary": "Obter Venda por QR Code",
+        "description": "Obtém os detalhes de uma venda a partir do QR Code de transporte",
+        "operationId": "getSaleByQrCode",
+        "tags": ["Vendas"],
+        "parameters": [
+          {
+            "name": "qrCodeTransport",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "QR Code de transporte criptografado"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Venda encontrada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Venda não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/{saleId}": {
+      "get": {
+        "summary": "Obter Venda por ID",
+        "description": "Obtém os detalhes de uma venda a partir do seu ID",
+        "operationId": "getSaleById",
+        "tags": ["Vendas"],
+        "parameters": [
+          {
+            "name": "saleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^sls_[a-zA-Z0-9]{26}$"
+            },
+            "description": "ID único da venda"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Venda encontrada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Venda não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/log/{qrCodeId}": {
+      "get": {
+        "summary": "Obter Log de Venda por QR Code",
+        "description": "Obtém o histórico de vendas relacionadas a um QR Code específico",
+        "operationId": "getSaleLogByQrCode",
+        "tags": ["Logs"],
+        "parameters": [
+          {
+            "name": "qrCodeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^qrc_[a-zA-Z0-9]{26}$"
+            },
+            "description": "ID único do QR Code"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logs encontrados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SaleLog"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "QR Code não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/log/professional/{professionalId}": {
+      "get": {
+        "summary": "Obter Log de Venda por Profissional",
+        "description": "Obtém o histórico de vendas realizadas por um profissional específico",
+        "operationId": "getSaleLogByProfessional",
+        "tags": ["Logs"],
+        "parameters": [
+          {
+            "name": "professionalId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^prf_[a-zA-Z0-9]{26}$"
+            },
+            "description": "ID único do profissional"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logs encontrados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SaleLog"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Profissional não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/card-readers-new": {
+      "post": {
+        "summary": "Novo Leitor de Cartão",
+        "description": "Registra um novo leitor de cartão a partir de um QR Code de transporte",
+        "operationId": "createCardReader",
+        "tags": ["Leitores de Cartão"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCardReaderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Leitor de cartão criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardReaderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou QR Code já utilizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "QR Code não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/card-readers-approve": {
+      "put": {
+        "summary": "Aprovar Leitor de Cartão",
+        "description": "Aprova um ou mais leitores de cartão pendentes",
+        "operationId": "approveCardReader",
+        "tags": ["Leitores de Cartão"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveCardReaderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Leitores de cartão aprovados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Leitores de cartão aprovados com sucesso"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Leitores não encontrados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/card-readers-disapprove/{cardReaderId}": {
+      "put": {
+        "summary": "Reprovar Leitor de Cartão",
+        "description": "Reprova um leitor de cartão pendente",
+        "operationId": "disapproveCardReader",
+        "tags": ["Leitores de Cartão"],
+        "parameters": [
+          {
+            "name": "cardReaderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^car_[a-zA-Z0-9]{26}$"
+            },
+            "description": "ID único do leitor de cartão"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Leitor de cartão reprovado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Leitor de cartão reprovado com sucesso"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Leitor não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/card-readers": {
+      "get": {
+        "summary": "Listar Leitores de Cartão",
+        "description": "Lista os leitores de cartão com opções de filtragem",
+        "operationId": "listCardReaders",
+        "tags": ["Leitores de Cartão"],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-04"
+            },
+            "description": "Período para filtrar (formato YYYY-MM)"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            },
+            "description": "Número da página"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Itens por página"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["awaiting", "approved", "disapproved"]
+            },
+            "description": "Status do leitor de cartão"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Termo de busca"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de leitores de cartão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CardReader"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/card-readers-products/{cardReaderId}": {
+      "get": {
+        "summary": "Listar Produtos do Leitor de Cartão",
+        "description": "Lista os produtos associados a um leitor de cartão específico",
+        "operationId": "listCardReaderProducts",
+        "tags": ["Leitores de Cartão"],
+        "parameters": [
+          {
+            "name": "cardReaderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^car_[a-zA-Z0-9]{26}$"
+            },
+            "description": "ID único do leitor de cartão"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Itens por página"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de produtos do leitor de cartão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CardReaderProduct"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Leitor de cartão não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Token JWT de autenticação. Use o prefix 'Bearer' seguido do token"
+      }
+    },
+    "schemas": {
+      "NewSaleRequest": {
+        "type": "object",
+        "required": ["qrCodeTransport"],
+        "properties": {
+          "qrCodeTransport": {
+            "type": "string",
+            "description": "QR Code de transporte criptografado"
+          }
+        }
+      },
+      "CancelSaleRequest": {
+        "type": "object",
+        "required": ["qrCodeTransport"],
+        "properties": {
+          "qrCodeTransport": {
+            "type": "string",
+            "description": "QR Code de transporte criptografado"
+          }
+        }
+      },
+      "SaleResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único da venda",
+            "example": "sls_01JP507K5XVDZ5FJ6A3TZ6W5FK"
+          },
+          "qrCodeId": {
+            "type": "string",
+            "description": "ID do QR Code",
+            "example": "qrc_01JP4W7FBF8SKMPPTV53GN5NK1"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "canceled"],
+            "description": "Status da venda"
+          },
+          "professional": {
+            "$ref": "#/components/schemas/Professional"
+          },
+          "product": {
+            "$ref": "#/components/schemas/Product"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação da venda"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de atualização da venda"
+          }
+        }
+      },
+      "Professional": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID do profissional",
+            "example": "prf_01JPAKK1HX2S9N92HT3EPEFC0Z"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do profissional"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email do profissional"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Telefone do profissional"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID do produto",
+            "example": "prd_01JNHFHM3B1VA5T77Y5PP01SNZ"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do produto"
+          },
+          "batch": {
+            "type": "string",
+            "description": "Lote do produto"
+          },
+          "expiresIn": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de validade do produto"
+          }
+        }
+      },
+      "SaleLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID do log"
+          },
+          "action": {
+            "type": "string",
+            "enum": ["sale", "cancel"],
+            "description": "Ação registrada"
+          },
+          "saleId": {
+            "type": "string",
+            "description": "ID da venda relacionada"
+          },
+          "qrCodeId": {
+            "type": "string",
+            "description": "ID do QR Code relacionado"
+          },
+          "professionalId": {
+            "type": "string",
+            "description": "ID do profissional que realizou a ação"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação do log"
+          }
+        }
+      },
+      "NewCardReaderRequest": {
+        "type": "object",
+        "required": ["qrCodeTransport", "professionalId"],
+        "properties": {
+          "qrCodeTransport": {
+            "type": "string",
+            "description": "QR Code de transporte criptografado"
+          },
+          "professionalId": {
+            "type": "string",
+            "description": "ID do profissional associado ao leitor"
+          }
+        }
+      },
+      "ApproveCardReaderRequest": {
+        "type": "object",
+        "required": ["approveAll"],
+        "properties": {
+          "approveAll": {
+            "type": "boolean",
+            "description": "Aprovar todos os leitores pendentes"
+          },
+          "professionalIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "IDs dos profissionais cujos leitores devem ser aprovados (ignorado se approveAll=true)"
+          }
+        }
+      },
+      "CardReaderResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único do leitor de cartão",
+            "example": "car_01JTBJN67QRED578J6TM51JVKM"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["awaiting", "approved", "disapproved"],
+            "description": "Status do leitor de cartão"
+          },
+          "professional": {
+            "$ref": "#/components/schemas/Professional"
+          },
+          "qrCode": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "ID do QR Code"
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação do leitor de cartão"
+          }
+        }
+      },
+      "CardReader": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único do leitor de cartão",
+            "example": "car_01JTBJN67QRED578J6TM51JVKM"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["awaiting", "approved", "disapproved"],
+            "description": "Status do leitor de cartão"
+          },
+          "professional": {
+            "$ref": "#/components/schemas/Professional"
+          },
+          "qrCodeId": {
+            "type": "string",
+            "description": "ID do QR Code"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação do leitor de cartão"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de atualização do leitor de cartão"
+          }
+        }
+      },
+      "CardReaderProduct": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID único do produto"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do produto"
+          },
+          "batch": {
+            "type": "string",
+            "description": "Lote do produto"
+          },
+          "expiresIn": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de validade do produto"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantidade disponível"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "totalItems": {
+            "type": "integer",
+            "description": "Total de itens disponíveis"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total de páginas"
+          },
+          "currentPage": {
+            "type": "integer",
+            "description": "Página atual"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "Itens por página"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "description": "Código HTTP do erro"
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem de erro"
+          },
+          "error": {
+            "type": "string",
+            "description": "Tipo do erro"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data e hora do erro"
+          }
+        }
+      }
+    }
+  }
+}

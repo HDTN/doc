@@ -1,0 +1,501 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Local Tests & Brasil API",
+    "description": "Documentação de APIs para testes locais de processamento de QR Codes e integração com Brasil API",
+    "version": "1.0.0",
+    "contact": {
+      "name": "ByeFive Suporte",
+      "email": "suporte@byefive.com.br"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Servidor local para processamento de QR Codes"
+    },
+    {
+      "url": "http://localhost:8000",
+      "description": "Servidor local para preparação de QR Codes"
+    },
+    {
+      "url": "https://brasilapi.com.br/api",
+      "description": "Brasil API"
+    }
+  ],
+  "paths": {
+    "/upload": {
+      "post": {
+        "summary": "Processar QR Codes em imagem",
+        "description": "Faz upload de uma imagem para decodificar ou ler os QR Codes presentes",
+        "operationId": "uploadImage",
+        "tags": ["QR Code Processing"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Imagem contendo QR Codes para processamento"
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "QR Codes processados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QrCodesProcessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros inválidos ou arquivo inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro no processamento do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/process": {
+      "post": {
+        "summary": "Preparar QR Codes",
+        "description": "Faz upload de uma imagem para preparação ou pré-processamento de QR Codes",
+        "operationId": "prepareQrCodes",
+        "tags": ["QR Code Processing"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Imagem contendo QR Codes para preparação"
+                  }
+                },
+                "required": ["image"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "QR Codes preparados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QrCodesPrepareResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros inválidos ou arquivo inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro no processamento do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cnpj/v1/{cnpj}": {
+      "get": {
+        "summary": "Obter informações de CNPJ",
+        "description": "Recupera informações detalhadas sobre um CNPJ através da Brasil API",
+        "operationId": "getCnpjInfo",
+        "tags": ["Brasil API"],
+        "parameters": [
+          {
+            "name": "cnpj",
+            "in": "path",
+            "description": "Número do CNPJ (apenas números)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{14}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informações do CNPJ recuperadas com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CnpjResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "CNPJ inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "CNPJ não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro no servidor da Brasil API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/registrobr/v1/{domain}": {
+      "get": {
+        "summary": "Verificar disponibilidade de domínio",
+        "description": "Verifica status e disponibilidade de um domínio .br através da Brasil API",
+        "operationId": "checkDomain",
+        "tags": ["Brasil API"],
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "path",
+            "description": "Nome do domínio a ser verificado (ex: byefive.com.br)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "byefive.com.br"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informações do domínio recuperadas com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Domínio inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Domínio não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro no servidor da Brasil API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "QrCodesProcessResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica se o processamento foi bem-sucedido"
+          },
+          "results": {
+            "type": "array",
+            "description": "Lista de QR Codes decodificados",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "description": "Conteúdo decodificado do QR Code"
+                },
+                "position": {
+                  "type": "object",
+                  "description": "Posição do QR Code na imagem",
+                  "properties": {
+                    "x": {
+                      "type": "number",
+                      "description": "Coordenada X do QR Code"
+                    },
+                    "y": {
+                      "type": "number",
+                      "description": "Coordenada Y do QR Code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "count": {
+            "type": "integer",
+            "description": "Número total de QR Codes decodificados"
+          },
+          "processTime": {
+            "type": "number",
+            "description": "Tempo de processamento em segundos"
+          }
+        }
+      },
+      "QrCodesPrepareResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica se a preparação foi bem-sucedida"
+          },
+          "preprocessedImage": {
+            "type": "string",
+            "format": "binary",
+            "description": "Imagem pré-processada em formato base64"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Metadados do processamento",
+            "properties": {
+              "originalSize": {
+                "type": "object",
+                "properties": {
+                  "width": {
+                    "type": "integer",
+                    "description": "Largura original da imagem"
+                  },
+                  "height": {
+                    "type": "integer",
+                    "description": "Altura original da imagem"
+                  }
+                }
+              },
+              "processedSize": {
+                "type": "object",
+                "properties": {
+                  "width": {
+                    "type": "integer",
+                    "description": "Largura da imagem processada"
+                  },
+                  "height": {
+                    "type": "integer",
+                    "description": "Altura da imagem processada"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "CnpjResponse": {
+        "type": "object",
+        "properties": {
+          "cnpj": {
+            "type": "string",
+            "description": "CNPJ consultado"
+          },
+          "razao_social": {
+            "type": "string",
+            "description": "Razão social da empresa"
+          },
+          "nome_fantasia": {
+            "type": "string",
+            "description": "Nome fantasia da empresa"
+          },
+          "cep": {
+            "type": "string",
+            "description": "CEP do endereço"
+          },
+          "data_situacao": {
+            "type": "string",
+            "description": "Data da situação cadastral"
+          },
+          "situacao": {
+            "type": "string",
+            "description": "Situação cadastral"
+          },
+          "endereco": {
+            "type": "object",
+            "description": "Dados do endereço",
+            "properties": {
+              "logradouro": {
+                "type": "string",
+                "description": "Logradouro"
+              },
+              "numero": {
+                "type": "string",
+                "description": "Número"
+              },
+              "complemento": {
+                "type": "string",
+                "description": "Complemento"
+              },
+              "bairro": {
+                "type": "string",
+                "description": "Bairro"
+              },
+              "municipio": {
+                "type": "string",
+                "description": "Município"
+              },
+              "uf": {
+                "type": "string",
+                "description": "UF"
+              }
+            }
+          },
+          "cnae_fiscal": {
+            "type": "integer",
+            "description": "Código CNAE fiscal"
+          },
+          "cnae_fiscal_descricao": {
+            "type": "string",
+            "description": "Descrição do CNAE fiscal"
+          },
+          "capital_social": {
+            "type": "number",
+            "description": "Capital social"
+          }
+        }
+      },
+      "DomainResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Status do domínio (ex: REGISTERED)"
+          },
+          "fqdn": {
+            "type": "string",
+            "description": "Fully Qualified Domain Name"
+          },
+          "hosts": {
+            "type": "array",
+            "description": "Servidores DNS do domínio",
+            "items": {
+              "type": "string"
+            }
+          },
+          "publication-status": {
+            "type": "string",
+            "description": "Status de publicação do domínio"
+          },
+          "expires-at": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de expiração do domínio"
+          },
+          "suggestions": {
+            "type": "array",
+            "description": "Sugestões de domínios disponíveis",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indica que houve um erro",
+            "default": false
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem de erro"
+          },
+          "error": {
+            "type": "string",
+            "description": "Tipo do erro"
+          },
+          "status": {
+            "type": "integer",
+            "description": "Código HTTP do erro"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "QR Code Processing",
+      "description": "Endpoints para processamento local de QR Codes"
+    },
+    {
+      "name": "Brasil API",
+      "description": "Integrações com os serviços da Brasil API"
+    }
+  ]
+}

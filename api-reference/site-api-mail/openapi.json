@@ -1,0 +1,321 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Site API Mail",
+    "description": "API para envio de e-mails a partir dos formulários do site ByeFive",
+    "version": "1.0.0",
+    "contact": {
+      "name": "ByeFive Suporte",
+      "email": "suporte@byefive.com.br"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://sendmail.site.staging.byefive.com.br",
+      "description": "Servidor de Staging"
+    },
+    {
+      "url": "https://sendmail.site.production.byefive.com.br",
+      "description": "Servidor de Produção"
+    }
+  ],
+  "security": [
+    {
+      "apiKeyHeader": []
+    }
+  ],
+  "paths": {
+    "/send": {
+      "post": {
+        "summary": "Enviar e-mail",
+        "description": "Envia e-mails a partir dos diferentes formulários do site",
+        "operationId": "sendEmail",
+        "requestBody": {
+          "description": "Detalhes do e-mail a ser enviado",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequest"
+              },
+              "examples": {
+                "brandFromDealer": {
+                  "summary": "Marcas via Distribuidores",
+                  "value": {
+                    "name": "João",
+                    "surname": "Silva",
+                    "email": "joao@empresa.com.br",
+                    "phone": "11999887766",
+                    "company": "Empresa ABC",
+                    "department": "Marketing",
+                    "subject": "price",
+                    "subscriptionType": "brand-from-dealer",
+                    "authorizeMail": true,
+                    "message": "Gostaria de saber mais sobre preços para marcas que vendem via distribuidores."
+                  }
+                },
+                "example": {
+                  "summary": "Exemplo",
+                  "value": {
+                    "name": "Maria",
+                    "surname": "Souza",
+                    "email": "maria@empresa.com.br",
+                    "phone": "11988776655",
+                    "company": "Empresa XYZ",
+                    "department": "Vendas",
+                    "subject": "email-presentation",
+                    "subscriptionType": "example",
+                    "authorizeMail": true,
+                    "message": "Gostaria de receber um exemplo da solução."
+                  }
+                },
+                "brand": {
+                  "summary": "Marcas diretas",
+                  "value": {
+                    "name": "Pedro",
+                    "surname": "Santos",
+                    "email": "pedro@marca.com.br",
+                    "phone": "11977665544",
+                    "company": "Marca Direct",
+                    "department": "Comercial",
+                    "subject": "price",
+                    "subscriptionType": "brand",
+                    "authorizeMail": true,
+                    "message": "Gostaria de saber mais sobre preços para marcas que vendem diretamente para PDVs."
+                  }
+                },
+                "dealer": {
+                  "summary": "Distribuidores",
+                  "value": {
+                    "name": "Ana",
+                    "surname": "Oliveira",
+                    "email": "ana@distribuidor.com.br",
+                    "phone": "11966554433",
+                    "company": "Distribuidor Alfa",
+                    "department": "Operações",
+                    "subject": "price",
+                    "subscriptionType": "dealer",
+                    "authorizeMail": true,
+                    "message": "Gostaria de saber mais sobre preços para distribuidores."
+                  }
+                },
+                "hybrid": {
+                  "summary": "Modelo Híbrido",
+                  "value": {
+                    "name": "Carlos",
+                    "surname": "Ferreira",
+                    "email": "carlos@empresa.com.br",
+                    "phone": "11955443322",
+                    "company": "Empresa Híbrida",
+                    "department": "Diretoria",
+                    "subject": "price",
+                    "subscriptionType": "hybrid",
+                    "authorizeMail": true,
+                    "message": "Gostaria de saber mais sobre preços para o modelo híbrido de distribuição."
+                  }
+                },
+                "presentationEmail": {
+                  "summary": "Apresentação por E-mail",
+                  "value": {
+                    "name": "Lucia",
+                    "surname": "Mendes",
+                    "email": "lucia@empresa.com.br",
+                    "phone": "11944332211",
+                    "company": "Empresa Delta",
+                    "department": "Inovação",
+                    "subscriptionType": "presentation-email",
+                    "authorizeMail": true,
+                    "message": "Gostaria de receber uma apresentação por e-mail."
+                  }
+                },
+                "presentationVideo": {
+                  "summary": "Apresentação por Vídeo",
+                  "value": {
+                    "name": "Roberto",
+                    "surname": "Alves",
+                    "email": "roberto@empresa.com.br",
+                    "phone": "11933221100",
+                    "company": "Empresa Omega",
+                    "department": "TI",
+                    "subscriptionType": "presentation-video",
+                    "authorizeMail": true,
+                    "message": "Gostaria de agendar uma apresentação por videoconferência."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "E-mail enviado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "example": {
+                  "message": "E-mail enviado com sucesso",
+                  "success": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "O campo 'email' é obrigatório",
+                  "success": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API Key inválida ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "API Key inválida",
+                  "success": false
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro no servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "Erro ao enviar e-mail",
+                  "success": false
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyHeader": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKeyHeader": {
+        "type": "apiKey",
+        "name": "x-api-key",
+        "in": "header",
+        "description": "API Key necessária para acessar os endpoints de envio de e-mail"
+      }
+    },
+    "schemas": {
+      "EmailRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "phone",
+          "subscriptionType"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do solicitante"
+          },
+          "surname": {
+            "type": "string",
+            "description": "Sobrenome do solicitante"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "E-mail do solicitante"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Telefone do solicitante"
+          },
+          "company": {
+            "type": "string",
+            "description": "Nome da empresa"
+          },
+          "department": {
+            "type": "string",
+            "description": "Departamento ou área de atuação"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Assunto do e-mail",
+            "enum": [
+              "price",
+              "email-presentation",
+              "other"
+            ]
+          },
+          "subscriptionType": {
+            "type": "string",
+            "description": "Tipo de solicitação",
+            "enum": [
+              "brand-from-dealer",
+              "example",
+              "brand",
+              "dealer",
+              "hybrid",
+              "presentation-email",
+              "presentation-video"
+            ]
+          },
+          "authorizeMail": {
+            "type": "boolean",
+            "description": "Autorização para envio de e-mails futuros"
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem da solicitação"
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "Indicador de sucesso",
+            "default": true
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Descrição do erro"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "Indicador de sucesso",
+            "default": false
+          }
+        }
+      }
+    }
+  }
+}

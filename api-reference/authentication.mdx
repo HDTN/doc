@@ -1,0 +1,118 @@
+---
+title: 'Autenticação'
+description: 'Como autenticar suas solicitações à API ByeFive'
+---
+
+# Autenticação
+
+Todas as APIs da plataforma ByeFive utilizam autenticação via Bearer Token para garantir a segurança das informações.
+
+## Bearer Token
+
+Para autenticar suas solicitações, inclua o cabeçalho `Authorization` com um token Bearer:
+
+```bash
+Authorization: Bearer seu_token_de_acesso
+```
+
+<CodeGroup>
+```bash cURL
+curl -X GET https://qrcode.app.byefive.com.br/rest/qr-codes/schedule-batch \
+  -H "Authorization: Bearer seu_token_de_acesso"
+```
+
+```javascript JavaScript
+const response = await fetch('https://qrcode.app.byefive.com.br/rest/qr-codes/schedule-batch', {
+  method: 'GET',
+  headers: {
+    'Authorization': 'Bearer seu_token_de_acesso',
+    'Content-Type': 'application/json'
+  }
+});
+```
+
+```python Python
+import requests
+
+headers = {
+  'Authorization': 'Bearer seu_token_de_acesso',
+  'Content-Type': 'application/json'
+}
+
+response = requests.get(
+  'https://qrcode.app.byefive.com.br/rest/qr-codes/schedule-batch',
+  headers=headers
+)
+```
+</CodeGroup>
+
+## Obtenção de Tokens
+
+Existem dois tipos principais de tokens utilizados nas APIs:
+
+### 1. Tokens de Usuário
+
+Tokens gerados após autenticação bem-sucedida do usuário. Úteis para operações que exigem contexto do usuário.
+
+<Steps>
+  <Step title="Autenticar Usuário">
+    Realize uma chamada ao endpoint de autenticação com as credenciais do usuário.
+  </Step>
+  <Step title="Receber Token">
+    Após autenticação bem-sucedida, você receberá um token de acesso.
+  </Step>
+  <Step title="Utilizar Token">
+    Inclua o token recebido no cabeçalho `Authorization` das solicitações subsequentes.
+  </Step>
+</Steps>
+
+### 2. Tokens de API (Chaves de API)
+
+Para integrações sistema-a-sistema, é recomendado o uso de chaves de API.
+
+<Steps>
+  <Step title="Acessar Dashboard">
+    Entre no [painel do desenvolvedor](https://dashboard.byefive.com.br/developer).
+  </Step>
+  <Step title="Gerar Chave">
+    Crie uma nova chave de API definindo escopos de acesso necessários.
+  </Step>
+  <Step title="Obter Token">
+    Use a chave gerada para autenticar e obter um token via endpoint de autenticação de API.
+  </Step>
+</Steps>
+
+## Renovação de Tokens
+
+Os tokens têm um tempo de expiração para maior segurança. Para renovar um token expirado:
+
+```bash
+POST https://auth.byefive.com.br/refresh-token
+```
+
+Com o corpo:
+
+```json
+{
+  "refreshToken": "seu_refresh_token"
+}
+```
+
+<Warning>
+  Nunca compartilhe seus tokens ou armazene-os em código-fonte público. Sempre utilize variáveis de ambiente ou sistemas seguros de gerenciamento de segredos.
+</Warning>
+
+## Níveis de Permissão
+
+As APIs da ByeFive implementam controle de acesso baseado em papéis. Dependendo do seu nível de acesso, certos endpoints podem estar indisponíveis ou retornar apenas dados parciais.
+
+| Papel | Descrição |
+|-------|-----------|
+| Admin | Acesso total a todas as funcionalidades |
+| Manager | Acesso a gerenciamento de recursos, sem acesso a configurações administrativas |
+| Professional | Acesso limitado a recursos específicos do profissional |
+| User | Acesso somente a dados do próprio usuário |
+
+<Note>
+  Verifique que seu token possui as permissões adequadas para as operações que deseja realizar.
+</Note>

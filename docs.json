@@ -7,7 +7,7 @@
     "light": "#b23390",
     "dark": "#b23390"
   },
- "favicon": "/favicon.svg",
+  "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
       {
@@ -38,42 +38,400 @@
         "tab": "API Reference",
         "groups": [
           {
-            "group": "API Documentation",
+            "group": "authentication.mdx",
+            "pages": []
+          },
+          {
+            "group": "introduction.mdx",
+            "pages": []
+          },
+          {
+            "group": "local-tests",
             "pages": [
-              "api-reference/introduction"
+              {
+                "group": "brasil-api",
+                "pages": [
+                  "api-reference/local-tests/endpoints/brasil-api/check-domain",
+                  "api-reference/local-tests/endpoints/brasil-api/get-cnpj-info"
+                ]
+              },
+              {
+                "group": "request",
+                "pages": [
+                  "api-reference/local-tests/endpoints/request/prepare-qr-codes",
+                  "api-reference/local-tests/endpoints/request/process-qr-codes-upload",
+                  "api-reference/local-tests/endpoints/request/read-hash-codes"
+                ]
+              }
             ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "openapi.json",
+            "pages": []
+          },
+          {
+            "group": "qr-codes",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              {
+                "group": "batches",
+                "pages": [
+                  "api-reference/qr-codes/endpoints/batches/avaibility-stock-batch",
+                  "api-reference/qr-codes/endpoints/batches/check-customer-stock-batch",
+                  "api-reference/qr-codes/endpoints/batches/list-batch",
+                  "api-reference/qr-codes/endpoints/batches/new-stock-batch",
+                  "api-reference/qr-codes/endpoints/batches/schedule-batch",
+                  "api-reference/qr-codes/endpoints/batches/schedule-id-batch",
+                  "api-reference/qr-codes/endpoints/batches/schedule-stock-batch",
+                  "api-reference/qr-codes/endpoints/batches/update-batch"
+                ]
+              },
+              {
+                "group": "product-binding",
+                "pages": [
+                  "api-reference/qr-codes/endpoints/product-binding/delete-binding",
+                  "api-reference/qr-codes/endpoints/product-binding/get-by-id-binding",
+                  "api-reference/qr-codes/endpoints/product-binding/list-binding",
+                  "api-reference/qr-codes/endpoints/product-binding/new-binding",
+                  "api-reference/qr-codes/endpoints/product-binding/update-binding"
+                ]
+              },
+              {
+                "group": "transport",
+                "pages": [
+                  "api-reference/qr-codes/endpoints/transport/create-transport",
+                  "api-reference/qr-codes/endpoints/transport/search-hash-transport"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "register",
+            "pages": [
+              {
+                "group": "activation-codes",
+                "pages": [
+                  "api-reference/register/endpoints/activation-codes/create",
+                  "api-reference/register/endpoints/activation-codes/get-by-code",
+                  "api-reference/register/endpoints/activation-codes/get-by-id",
+                  "api-reference/register/endpoints/activation-codes/list",
+                  "api-reference/register/endpoints/activation-codes/remove",
+                  "api-reference/register/endpoints/activation-codes/update",
+                  "api-reference/register/endpoints/activation-codes/validate"
+                ]
+              },
+              {
+                "group": "addresses",
+                "pages": [
+                  "api-reference/register/endpoints/addresses/create",
+                  "api-reference/register/endpoints/addresses/get-by-cep",
+                  "api-reference/register/endpoints/addresses/get-by-id",
+                  "api-reference/register/endpoints/addresses/list",
+                  "api-reference/register/endpoints/addresses/update"
+                ]
+              },
+              {
+                "group": "application-releases",
+                "pages": [
+                  "api-reference/register/endpoints/application-releases/create-version",
+                  "api-reference/register/endpoints/application-releases/create",
+                  "api-reference/register/endpoints/application-releases/get-by-id",
+                  "api-reference/register/endpoints/application-releases/get-version-by-id",
+                  "api-reference/register/endpoints/application-releases/list-versions",
+                  "api-reference/register/endpoints/application-releases/list",
+                  "api-reference/register/endpoints/application-releases/update-version-changelog",
+                  "api-reference/register/endpoints/application-releases/update"
+                ]
+              },
+              {
+                "group": "authentication",
+                "pages": []
+              },
+              {
+                "group": "check-in",
+                "pages": [
+                  "api-reference/register/endpoints/check-in/create",
+                  "api-reference/register/endpoints/check-in/list"
+                ]
+              },
+              {
+                "group": "configurations",
+                "pages": [
+                  "api-reference/register/endpoints/configurations/create",
+                  "api-reference/register/endpoints/configurations/list",
+                  "api-reference/register/endpoints/configurations/remove"
+                ]
+              },
+              {
+                "group": "customer-profiles",
+                "pages": [
+                  "api-reference/register/endpoints/customer-profiles/create",
+                  "api-reference/register/endpoints/customer-profiles/get-by-id",
+                  "api-reference/register/endpoints/customer-profiles/list",
+                  "api-reference/register/endpoints/customer-profiles/update"
+                ]
+              },
+              {
+                "group": "customers",
+                "pages": [
+                  "api-reference/register/endpoints/customers/count-dealers",
+                  "api-reference/register/endpoints/customers/create",
+                  "api-reference/register/endpoints/customers/get-by-id",
+                  "api-reference/register/endpoints/customers/get-customer-flags-rules",
+                  "api-reference/register/endpoints/customers/list-all-unrestricted",
+                  "api-reference/register/endpoints/customers/list-brands-from-dealer",
+                  "api-reference/register/endpoints/customers/list-dealer-ids",
+                  "api-reference/register/endpoints/customers/list",
+                  "api-reference/register/endpoints/customers/update-status",
+                  "api-reference/register/endpoints/customers/update"
+                ]
+              },
+              {
+                "group": "documents",
+                "pages": [
+                  "api-reference/register/endpoints/documents/create",
+                  "api-reference/register/endpoints/documents/get-by-id",
+                  "api-reference/register/endpoints/documents/list",
+                  "api-reference/register/endpoints/documents/remove",
+                  "api-reference/register/endpoints/documents/update"
+                ]
+              },
+              {
+                "group": "feature-flags",
+                "pages": [
+                  "api-reference/register/endpoints/feature-flags/create-api-key",
+                  "api-reference/register/endpoints/feature-flags/create",
+                  "api-reference/register/endpoints/feature-flags/get-by-rule",
+                  "api-reference/register/endpoints/feature-flags/list",
+                  "api-reference/register/endpoints/feature-flags/remove",
+                  "api-reference/register/endpoints/feature-flags/update"
+                ]
+              },
+              {
+                "group": "functionalities",
+                "pages": [
+                  "api-reference/register/endpoints/functionalities/create",
+                  "api-reference/register/endpoints/functionalities/get-by-id-with-flags",
+                  "api-reference/register/endpoints/functionalities/get-by-id",
+                  "api-reference/register/endpoints/functionalities/list",
+                  "api-reference/register/endpoints/functionalities/update"
+                ]
+              },
+              {
+                "group": "interactions",
+                "pages": [
+                  "api-reference/register/endpoints/interactions/index"
+                ]
+              },
+              {
+                "group": "invites",
+                "pages": [
+                  "api-reference/register/endpoints/invites/count",
+                  "api-reference/register/endpoints/invites/create",
+                  "api-reference/register/endpoints/invites/get-by-id",
+                  "api-reference/register/endpoints/invites/list",
+                  "api-reference/register/endpoints/invites/remove",
+                  "api-reference/register/endpoints/invites/resend-all",
+                  "api-reference/register/endpoints/invites/resend"
+                ]
+              },
+              {
+                "group": "kv-database",
+                "pages": [
+                  "api-reference/register/endpoints/kv-database/create",
+                  "api-reference/register/endpoints/kv-database/get-by-id",
+                  "api-reference/register/endpoints/kv-database/remove"
+                ]
+              },
+              {
+                "group": "notes",
+                "pages": [
+                  "api-reference/register/endpoints/notes/create",
+                  "api-reference/register/endpoints/notes/get-by-id",
+                  "api-reference/register/endpoints/notes/update"
+                ]
+              },
+              {
+                "group": "pdv-networks",
+                "pages": [
+                  "api-reference/register/endpoints/pdv-networks/create",
+                  "api-reference/register/endpoints/pdv-networks/get-by-id",
+                  "api-reference/register/endpoints/pdv-networks/list",
+                  "api-reference/register/endpoints/pdv-networks/remove",
+                  "api-reference/register/endpoints/pdv-networks/update"
+                ]
+              },
+              {
+                "group": "pdvs",
+                "pages": [
+                  "api-reference/register/endpoints/pdvs/check-requested-exists",
+                  "api-reference/register/endpoints/pdvs/count",
+                  "api-reference/register/endpoints/pdvs/create",
+                  "api-reference/register/endpoints/pdvs/get-by-id",
+                  "api-reference/register/endpoints/pdvs/get-requested-by-id",
+                  "api-reference/register/endpoints/pdvs/list-all",
+                  "api-reference/register/endpoints/pdvs/list-mobile",
+                  "api-reference/register/endpoints/pdvs/list-requested",
+                  "api-reference/register/endpoints/pdvs/list",
+                  "api-reference/register/endpoints/pdvs/remove",
+                  "api-reference/register/endpoints/pdvs/update"
+                ]
+              },
+              {
+                "group": "products",
+                "pages": [
+                  "api-reference/register/endpoints/products/create",
+                  "api-reference/register/endpoints/products/get-by-barcode",
+                  "api-reference/register/endpoints/products/get-by-id",
+                  "api-reference/register/endpoints/products/list",
+                  "api-reference/register/endpoints/products/remove",
+                  "api-reference/register/endpoints/products/update-status-points",
+                  "api-reference/register/endpoints/products/update"
+                ]
+              },
+              {
+                "group": "products-categories",
+                "pages": [
+                  "api-reference/register/endpoints/products-categories/create",
+                  "api-reference/register/endpoints/products-categories/get-by-id",
+                  "api-reference/register/endpoints/products-categories/list",
+                  "api-reference/register/endpoints/products-categories/remove",
+                  "api-reference/register/endpoints/products-categories/update"
+                ]
+              },
+              {
+                "group": "products-lines",
+                "pages": [
+                  "api-reference/register/endpoints/products-lines/create",
+                  "api-reference/register/endpoints/products-lines/get-by-id",
+                  "api-reference/register/endpoints/products-lines/list",
+                  "api-reference/register/endpoints/products-lines/remove",
+                  "api-reference/register/endpoints/products-lines/update"
+                ]
+              },
+              {
+                "group": "professionals",
+                "pages": [
+                  "api-reference/register/endpoints/professionals/create-connection",
+                  "api-reference/register/endpoints/professionals/create-or-update-note",
+                  "api-reference/register/endpoints/professionals/create",
+                  "api-reference/register/endpoints/professionals/get-by-cnpj-cpf",
+                  "api-reference/register/endpoints/professionals/get-by-email",
+                  "api-reference/register/endpoints/professionals/get-by-id",
+                  "api-reference/register/endpoints/professionals/get-note-by-id",
+                  "api-reference/register/endpoints/professionals/list-connections-alert",
+                  "api-reference/register/endpoints/professionals/list",
+                  "api-reference/register/endpoints/professionals/remove-connection-alert",
+                  "api-reference/register/endpoints/professionals/remove-connection",
+                  "api-reference/register/endpoints/professionals/remove-pdv-request",
+                  "api-reference/register/endpoints/professionals/remove",
+                  "api-reference/register/endpoints/professionals/update-config-private",
+                  "api-reference/register/endpoints/professionals/update-config-status",
+                  "api-reference/register/endpoints/professionals/update-connection",
+                  "api-reference/register/endpoints/professionals/update"
+                ]
+              },
+              {
+                "group": "subscriptions",
+                "pages": [
+                  "api-reference/register/endpoints/subscriptions/create",
+                  "api-reference/register/endpoints/subscriptions/get-by-id",
+                  "api-reference/register/endpoints/subscriptions/list-flags",
+                  "api-reference/register/endpoints/subscriptions/list-for-site",
+                  "api-reference/register/endpoints/subscriptions/list",
+                  "api-reference/register/endpoints/subscriptions/update"
+                ]
+              },
+              {
+                "group": "user-roles",
+                "pages": [
+                  "api-reference/register/endpoints/user-roles/get-by-id",
+                  "api-reference/register/endpoints/user-roles/get-master-by-customer",
+                  "api-reference/register/endpoints/user-roles/list",
+                  "api-reference/register/endpoints/user-roles/remove"
+                ]
+              },
+              {
+                "group": "users",
+                "pages": [
+                  "api-reference/register/endpoints/users/get-by-email-cpf",
+                  "api-reference/register/endpoints/users/get-by-id",
+                  "api-reference/register/endpoints/users/get-master-by-customer",
+                  "api-reference/register/endpoints/users/list-dealers",
+                  "api-reference/register/endpoints/users/list-flags",
+                  "api-reference/register/endpoints/users/list-pdvs",
+                  "api-reference/register/endpoints/users/list",
+                  "api-reference/register/endpoints/users/remove",
+                  "api-reference/register/endpoints/users/update-password",
+                  "api-reference/register/endpoints/users/update-status",
+                  "api-reference/register/endpoints/users/update-terms"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "sales",
+            "pages": [
+              {
+                "group": "card-readers",
+                "pages": [
+                  "api-reference/sales/endpoints/card-readers/approve-card-reader",
+                  "api-reference/sales/endpoints/card-readers/disapprove-card-reader",
+                  "api-reference/sales/endpoints/card-readers/list-card-reader-products",
+                  "api-reference/sales/endpoints/card-readers/list-card-readers",
+                  "api-reference/sales/endpoints/card-readers/new-card-reader"
+                ]
+              },
+              {
+                "group": "logs",
+                "pages": [
+                  "api-reference/sales/endpoints/logs/get-sale-log-by-professional",
+                  "api-reference/sales/endpoints/logs/get-sale-log-by-qr-code"
+                ]
+              },
+              {
+                "group": "sales",
+                "pages": [
+                  "api-reference/sales/endpoints/sales/cancel-sale",
+                  "api-reference/sales/endpoints/sales/get-sale-by-id",
+                  "api-reference/sales/endpoints/sales/get-sale-by-qr-code",
+                  "api-reference/sales/endpoints/sales/new-sale"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "security",
+            "pages": [
+              {
+                "group": "requests",
+                "pages": [
+                  "api-reference/security/endpoints/requests/api-keys",
+                  "api-reference/security/endpoints/requests/keychar"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "site-api-mail",
+            "pages": [
+              {
+                "group": "requests",
+                "pages": [
+                  "api-reference/site-api-mail/endpoints/requests/send-email-brand-from-dealer",
+                  "api-reference/site-api-mail/endpoints/requests/send-email-brand",
+                  "api-reference/site-api-mail/endpoints/requests/send-email-dealer",
+                  "api-reference/site-api-mail/endpoints/requests/send-email-example",
+                  "api-reference/site-api-mail/endpoints/requests/send-email-hybrid",
+                  "api-reference/site-api-mail/endpoints/requests/send-email-presentation-email",
+                  "api-reference/site-api-mail/endpoints/requests/send-email-presentation-video",
+                  "api-reference/site-api-mail/endpoints/requests/send-email"
+                ]
+              }
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
@@ -85,18 +443,11 @@
         "label": "Support",
         "href": "mailto:hi@mintlify.com"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
+    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/Bye5"
     }
   }
 }

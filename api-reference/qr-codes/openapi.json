@@ -1,0 +1,1113 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "QR Codes API",
+    "description": "API para gerenciamento de QR codes, lotes, transportes e vinculações com produtos no sistema ByeFive",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Suporte ByeFive",
+      "email": "api@byefive.com.br"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://qrcode.app.{stage}.byefive.com.br/rest",
+      "description": "Servidor da API QR Codes",
+      "variables": {
+        "stage": {
+          "default": "staging",
+          "enum": ["dev", "staging", ""],
+          "description": "Ambiente da API (vazio para produção)"
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/qr-codes/{id}": {
+      "get": {
+        "summary": "Buscar QR Code por ID",
+        "description": "Retorna os detalhes de um QR code específico pelo seu ID",
+        "operationId": "getQrCodeById",
+        "tags": ["QR Codes"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do QR Code no formato qrc_*",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "QR Code encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QrCode"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "QR Code não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/hash/{hash}": {
+      "get": {
+        "summary": "Buscar QR Code por Hash",
+        "description": "Retorna os detalhes de um QR code específico pela sua hash",
+        "operationId": "getQrCodeByHash",
+        "tags": ["QR Codes"],
+        "parameters": [
+          {
+            "name": "hash",
+            "in": "path",
+            "description": "Hash do QR Code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "QR Code encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QrCode"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "QR Code não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/schedule-batch": {
+      "post": {
+        "summary": "Agendar Novo Lote",
+        "description": "Cria um agendamento para gerar um novo lote de QR codes",
+        "operationId": "scheduleBatch",
+        "tags": ["Batches"],
+        "requestBody": {
+          "description": "Detalhes do agendamento do lote",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["quantity"],
+                "properties": {
+                  "quantity": {
+                    "type": "integer",
+                    "description": "Quantidade de QR codes a serem gerados no lote",
+                    "minimum": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Lote agendado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchSchedule"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      },
+      "get": {
+        "summary": "Listar Agendamentos de Lotes",
+        "description": "Retorna uma lista paginada de agendamentos de lotes",
+        "operationId": "listBatches",
+        "tags": ["Batches"],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Termo de busca para filtrar por batchNumber ou quantity",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filtro por status do lote",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["scheduled", "generated-database", "finished", "blocked"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Itens por página",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "Campo e direção para ordenação (exemplo: batchNumber-asc)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de agendamentos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BatchSchedule"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/schedule-batch/{id}": {
+      "get": {
+        "summary": "Buscar Agendamento de Lote por ID",
+        "description": "Retorna detalhes de um agendamento de lote específico",
+        "operationId": "getBatchById",
+        "tags": ["Batches"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do agendamento de lote",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Agendamento encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchSchedule"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Agendamento não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/update-batch/{id}": {
+      "patch": {
+        "summary": "Atualizar Status do Agendamento de Lote",
+        "description": "Atualiza o status de um lote agendado",
+        "operationId": "updateBatchStatus",
+        "tags": ["Batches"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do agendamento de lote",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Novo status do lote",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["status"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["finished", "blocked"],
+                    "description": "Novo status do lote"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Status atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "batchNumber": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Lote não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/new-stock": {
+      "post": {
+        "summary": "Definir Novo Estoque",
+        "description": "Cria um novo estoque de QR codes para um cliente",
+        "operationId": "createStock",
+        "tags": ["Batches"],
+        "requestBody": {
+          "description": "Detalhes do estoque",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["customerId", "quantity"],
+                "properties": {
+                  "customerId": {
+                    "type": "string",
+                    "description": "ID do cliente que receberá o estoque"
+                  },
+                  "quantity": {
+                    "type": "integer",
+                    "description": "Quantidade de QR codes a serem alocados"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Estoque criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Stock"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou estoque insuficiente"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/check-stock-availability/{quantity}": {
+      "get": {
+        "summary": "Verificar Disponibilidade de Estoque",
+        "description": "Verifica se há QR codes suficientes disponíveis para criar um estoque",
+        "operationId": "checkStockAvailability",
+        "tags": ["Batches"],
+        "parameters": [
+          {
+            "name": "quantity",
+            "in": "path",
+            "description": "Quantidade de QR codes a serem verificados",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verificação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "available": {
+                      "type": "boolean",
+                      "description": "Indica se a quantidade está disponível"
+                    },
+                    "quantity": {
+                      "type": "integer",
+                      "description": "Quantidade solicitada"
+                    },
+                    "remainingStock": {
+                      "type": "integer",
+                      "description": "Quantidade restante após a alocação"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/schedule-stock": {
+      "get": {
+        "summary": "Listar Agendamentos de Estoque",
+        "description": "Lista os estoques de QR codes alocados para um cliente",
+        "operationId": "listStocks",
+        "tags": ["Batches"],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "query",
+            "description": "ID do cliente para filtrar estoques",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Itens por página",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de estoques",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Stock"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/check-customer-stock/{customerId}": {
+      "get": {
+        "summary": "Verificar Saldo de QR Codes do Cliente",
+        "description": "Verifica o saldo de QR codes disponível para um cliente específico",
+        "operationId": "checkCustomerStock",
+        "tags": ["Batches"],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "ID do cliente",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Saldo verificado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "customerId": {
+                      "type": "string"
+                    },
+                    "customerName": {
+                      "type": "string"
+                    },
+                    "availableQrCodes": {
+                      "type": "integer"
+                    },
+                    "totalAllocated": {
+                      "type": "integer"
+                    },
+                    "totalUsed": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cliente não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/product-binding": {
+      "post": {
+        "summary": "Criar Novo Vínculo com Produto",
+        "description": "Vincula um intervalo de QR codes a um produto específico",
+        "operationId": "createProductBinding",
+        "tags": ["Product Binding"],
+        "requestBody": {
+          "description": "Detalhes do vínculo",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["firstQrCode", "lastQrCode", "productId", "batch", "expiresIn", "version"],
+                "properties": {
+                  "firstQrCode": {
+                    "type": "string",
+                    "description": "Primeiro QR code do intervalo (criptografado)"
+                  },
+                  "lastQrCode": {
+                    "type": "string",
+                    "description": "Último QR code do intervalo (criptografado)"
+                  },
+                  "productId": {
+                    "type": "string",
+                    "description": "ID do produto a ser vinculado"
+                  },
+                  "batch": {
+                    "type": "string",
+                    "description": "Número do lote do produto"
+                  },
+                  "expiresIn": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data de validade do produto (formato YYYY-MM-DD)"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "description": "Versão da etiqueta",
+                    "default": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Vínculo criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductBinding"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou QR codes não disponíveis"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      },
+      "get": {
+        "summary": "Listar Vínculos com Produtos",
+        "description": "Lista os vínculos entre QR codes e produtos",
+        "operationId": "listProductBindings",
+        "tags": ["Product Binding"],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Termo de busca",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Itens por página",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de vínculos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProductBinding"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/product-binding/{id}": {
+      "get": {
+        "summary": "Buscar Vínculo com Produto por ID",
+        "description": "Retorna detalhes de um vínculo específico entre QR codes e produto",
+        "operationId": "getProductBindingById",
+        "tags": ["Product Binding"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do vínculo no formato qrp_*",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vínculo encontrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductBinding"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remover Vínculo com Produto",
+        "description": "Remove um vínculo agendado que ainda não foi finalizado",
+        "operationId": "deleteProductBinding",
+        "tags": ["Product Binding"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do vínculo no formato qrp_*",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vínculo removido com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Vínculo não pode ser removido"
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/update-bind/{id}": {
+      "patch": {
+        "summary": "Atualizar Vínculo com Produto",
+        "description": "Atualiza as informações de lote e validade de um vínculo existente",
+        "operationId": "updateProductBinding",
+        "tags": ["Product Binding"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do vínculo no formato qrp_*",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Novos detalhes do vínculo",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "batch": {
+                    "type": "string",
+                    "description": "Novo número do lote do produto"
+                  },
+                  "expiresIn": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Nova data de validade do produto (formato YYYY-MM-DD)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vínculo atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "batch": {
+                      "type": "string"
+                    },
+                    "expiresIn": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    },
+    "/qr-codes/new-transport": {
+      "post": {
+        "summary": "Criar Transporte de QR Codes",
+        "description": "Transporta QR codes entre usuários e profissionais",
+        "operationId": "createTransport",
+        "tags": ["Transport"],
+        "requestBody": {
+          "description": "Detalhes do transporte",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["qrCode", "professionalWalletKey", "pdvId"],
+                "properties": {
+                  "qrCode": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Lista de QR codes a serem transportados"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "ID do usuário destinatário (quando aplicável)"
+                  },
+                  "professionalWalletKey": {
+                    "type": "string",
+                    "description": "Chave da carteira do profissional"
+                  },
+                  "pdvId": {
+                    "type": "string",
+                    "description": "ID do ponto de venda"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transporte criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transportId": {
+                          "type": "string"
+                        },
+                        "qrCodes": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "status": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou QR codes não disponíveis"
+          },
+          "401": {
+            "description": "Não autorizado"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "QrCode": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único do QR code"
+          },
+          "hash": {
+            "type": "string",
+            "description": "Hash do QR code"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status atual do QR code",
+            "enum": ["active", "inactive", "used"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data da última atualização"
+          }
+        }
+      },
+      "BatchSchedule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único do agendamento de lote"
+          },
+          "batchNumber": {
+            "type": "string",
+            "description": "Número do lote gerado"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantidade de QR codes no lote"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status atual do lote",
+            "enum": ["scheduled", "generated-database", "finished", "blocked"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data da última atualização"
+          }
+        }
+      },
+      "Stock": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único do estoque"
+          },
+          "customerId": {
+            "type": "string",
+            "description": "ID do cliente associado ao estoque"
+          },
+          "customerName": {
+            "type": "string",
+            "description": "Nome do cliente"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantidade de QR codes no estoque"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status atual do estoque",
+            "enum": ["active", "inactive"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação"
+          }
+        }
+      },
+      "ProductBinding": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identificador único do vínculo"
+          },
+          "firstQrCode": {
+            "type": "string",
+            "description": "Primeiro QR code do intervalo"
+          },
+          "lastQrCode": {
+            "type": "string",
+            "description": "Último QR code do intervalo"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Quantidade de QR codes no intervalo"
+          },
+          "productId": {
+            "type": "string",
+            "description": "ID do produto vinculado"
+          },
+          "productName": {
+            "type": "string",
+            "description": "Nome do produto"
+          },
+          "batch": {
+            "type": "string",
+            "description": "Número do lote do produto"
+          },
+          "expiresIn": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de validade do produto"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status atual do vínculo",
+            "enum": ["active", "inactive"]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data de criação"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "description": "Número da página atual"
+          },
+          "size": {
+            "type": "integer",
+            "description": "Itens por página"
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "Total de itens disponíveis"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total de páginas disponíveis"
+          }
+        }
+      }
+    }
+  }
+}

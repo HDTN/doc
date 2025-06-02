@@ -1,33 +1,61 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'Introdução à API'
+description: 'Conheça as APIs disponíveis na plataforma ByeFive'
 ---
 
+## APIs Disponíveis
+
+<CardGroup cols={2}>
+  <Card 
+    title="QR Codes API" 
+    icon="qrcode" 
+    href="/api-reference/qr-codes/introduction"
+  >
+    Gerencie QR codes, lotes, transportes e vinculações com produtos
+  </Card>
+  <Card 
+    title="Sign API" 
+    icon="signature" 
+    href="/api-reference/sign/introduction"
+  >
+    Serviços de assinatura digital e autenticação de documentos
+  </Card>
+  <Card 
+    title="Products API" 
+    icon="box" 
+    href="/api-reference/products/introduction"
+  >
+    Gerenciamento completo de produtos e catálogos
+  </Card>
+  <Card 
+    title="Users API" 
+    icon="users" 
+    href="/api-reference/users/introduction"
+  >
+    Gerenciamento de usuários, perfis e permissões
+  </Card>
+</CardGroup>
+
+## Primeiros Passos
+
+Para começar a utilizar nossas APIs, você precisa:
+
+1. [Criar uma conta](https://dashboard.byefive.com.br/signup) na plataforma ByeFive
+2. Gerar suas credenciais de API no [painel de desenvolvedor](https://dashboard.byefive.com.br/developer)
+3. Verificar a [autenticação](/api-reference/authentication) necessária para as chamadas de API
+
+## Ambientes Disponíveis
+
+A ByeFive oferece três ambientes para desenvolvimento e uso das APIs:
+
+| Ambiente | Base URL | Descrição |
+|----------|----------|-----------|
+| Desenvolvimento | `https://{api}.app.dev.byefive.com.br/rest` | Para testes durante o desenvolvimento |
+| Homologação | `https://{api}.app.staging.byefive.com.br/rest` | Para validar integrações antes da produção |
+| Produção | `https://{api}.app.byefive.com.br/rest` | Ambiente de produção para uso em sistemas reais |
+
+Substitua `{api}` pelo nome da API específica que você está utilizando (ex: `qrcode`, `sign`, etc.).
+
 <Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
+  As APIs são constantemente atualizadas com novos recursos. Consulte a documentação específica de cada API para informações detalhadas sobre os endpoints disponíveis.
 </Note>
-
-## Welcome
-
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
-
-## Authentication
-
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
-
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
